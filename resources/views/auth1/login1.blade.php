@@ -1,4 +1,4 @@
-{{-- @extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
 <div class="container">
@@ -8,20 +8,28 @@
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="login-user">
+                        @if(Session::has('success'))
+                        <div class = "alert alert-success">{{Session::get('success')}}</div>
+                        @endif
+                        @if(Session::has('message'))
+                        <div class = "alert alert-success">{{Session::get('message')}}</div>
+                        @endif
+                        @if(Session::has('fail'))
+                        <div class = "alert alert-danger">{{Session::get('fail')}}</div>
+                        @endif
                         @csrf
-
                         <div class="row mb-3">
                             <label for="email_phone" class="col-md-4 col-form-label text-md-end">{{ 'Email or Phone' }}</label>
 
                             <div class="col-md-6">
                                 <input id="email_phone" type="text" class="form-control @error('email_phone') is-invalid @enderror" name="email_phone" value="{{ old('email_phone') }}"  autocomplete="email_phone" autofocus>
-
                                 @error('email_phone')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
+                                
                             </div>
                         </div>
 
@@ -39,7 +47,23 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
+                        
+                        <div class="row mb-0">
+                            <div class="col-md-8 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Login') }}
+                                </button>
+{{-- 
+                                @if (Route::has('password.request'))
+                                    <a class="btn btn-link" href="{{ route('password.request') }}">
+                                        {{ __('Forgot Your Password?') }}
+                                    </a>
+                                @endif --}}
+                                <br><br>
+                                <a href="register1">New user? Register here!</a>
+                            </div>
+                        </div>
+                        {{-- <div class="row mb-3">
                             <div class="col-md-6 offset-md-4">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
@@ -49,9 +73,9 @@
                                     </label>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
-                        <div class="row mb-0">
+                        {{-- <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Login') }}
@@ -62,12 +86,14 @@
                                         {{ __('Forgot Your Password?') }}
                                     </a>
                                 @endif
+                                <br><br>
+                                <a href="register1">New user? Register here!</a>
                             </div>
-                        </div>
+                        </div> --}}
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@endsection --}}
+@endsection

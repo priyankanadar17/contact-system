@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Exports\ContactsExport;
 use App\Http\Requests\FormDataRequest;
 use App\Models\Contact;
+use Illuminate\Support\Str;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session as FacadesSession;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\Mime\Part\Multipart\FormDataPart;
@@ -39,25 +42,28 @@ class ContactController extends Controller
     // }
 
 
-    public function __construct()
-    {
-        $this->middleware(['auth','verified']);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware(['auth','verified']);
+    // }
 
-    
-    public function add_form() {
+
+    public function add_form()
+    {
         return view('contact');
     }
 
-    public function show(){
-      $current_user = Auth::user()->id;  
-      $data = Contact::where('user_id',$current_user)->get();
-      return view('list',['contacts'=>$data]);
+    public function show(Request $req)
+    {
+        $current_user = $req->session()->get('loginId');
+        $data = Contact::where('user_id', $current_user)->get();
+        return view('dashboard', ['contacts' => $data]);
     }
 
-    public function add(FormDataRequest $req){
+    public function add(FormDataRequest $req)
+    {
         $contact = new Contact();
-        $contact->user_id = Auth::user()->id;
+        $contact->user_id = $req->session()->get('loginId');
         $contact->firstname = $req->firstname;
         $contact->lastname = $req->lastname;
         $contact->email = $req->email;
@@ -65,23 +71,27 @@ class ContactController extends Controller
         $contact->address = $req->address;
         $contact->nickname = $req->nickname;
         $contact->company = $req->company;
-        if ($req->status=="Active") {
-        $contact->status =true;
+
+        if ($req->status == "Active") {
+            $contact->status = true;
         } else {
-            $contact->status =false;
+            $contact->status = false;
         }
+        $contact->key = Str::random(20);
         $contact->save();
-    
-        return redirect('list');
+
+        return redirect('dashboard');
     }
 
-    public function index($id){
+    public function index($id)
+    {
         $data = Contact::find($id);
         return response()->json($data, 200);
     }
 
-   
-    function update(Request $req){
+
+    function update(Request $req)
+    {
 
         $data = Contact::find($req->id);
         $data->firstname = $req->firstname;
@@ -91,19 +101,17 @@ class ContactController extends Controller
         $data->address = $req->address;
         $data->nickname = $req->nickname;
         $data->company = $req->company;
-        if ($req->status=="Active") {
-            $data->status =true;
-            } else {
-                $data->status =false;
-            }
+        if ($req->status == "Active") {
+            $data->status = true;
+        } else {
+            $data->status = false;
+        }
         $data->save();
-        return redirect('list');
+        return redirect('dashboard');
     }
 
-    public function export() 
+    public function export()
     {
         return Excel::download(new ContactsExport, 'contacts.csv');
     }
 }
-
-

@@ -64,3 +64,24 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+
+## Ajax
+let form = new FormData('form_id');
+$.ajax({
+	key: value,
+	key: value,
+	//important
+	url: ,
+	type: get/post/push/delete,
+	data: {"name": "sanket", "email" : "sanket@gmail.com"},
+    data: form,
+    processDate: false, // if we use formdata
+    success: function(response) {
+        console.log(response);
+    },
+    error: function(error){
+        console.log(error);
+    },
+})

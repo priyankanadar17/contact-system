@@ -23,11 +23,10 @@ return new class extends Migration
             $table->string('nickname');
             $table->string('company');
             $table->boolean('status');
-
-            
+            $table->string('key', 20)->unique();
+            // $table->foreign('key')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-
             $table->timestamps();
 
         });

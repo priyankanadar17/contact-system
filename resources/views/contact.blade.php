@@ -5,13 +5,13 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col">
-                <div class="card card-outline card-primary">
+                <div class="card card-outline card-primary"><br><br>
                     <div class="card-header">
                         <h3 class="card-title">Add Contact</h3>
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form method="POST" action="{{ url('list') }}">
+                    <form method="POST" action="{{ url('dashboard') }}">
                         @csrf
                         <div class="card-body row">
                             <div class="col-md-6">
@@ -103,6 +103,7 @@
                         <!-- /.card-body -->
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary">Add</button>
+                            <hr><a href="logout" class = "btn btn-primary">Logout</a>
                         </div>
                     </form>
                 </div>
