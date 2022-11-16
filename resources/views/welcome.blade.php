@@ -24,15 +24,15 @@
         <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
             @if (Route::has('login1'))
                 <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
-                    @auth
-                        <a href="{{ url('/home') }}" class="text-sm text-gray-700 dark:text-gray-500">Home</a>
+                    @if(Session::has('loginId'))
+                        <a href="{{ url('/dashboard') }}" class="text-sm text-gray-700 dark:text-gray-500">Go to Dashboard</a>
                     @else
                         <a href="{{ route('login1') }}" class="text-sm text-gray-700 dark:text-gray-500">Login</a>
 
                         @if (Route::has('register1'))
                             <a href="{{ route('register1') }}" class="ml-4 text-sm text-gray-700 dark:text-gray-500">Register</a>
                         @endif
-                    @endauth
+                    @endif
                 </div>
             @endif
 

@@ -58,6 +58,10 @@ Route::middleware(['isLoggedIn'])->group( function () {
 
     Route::get("share/{key}",[UrlController::class,'url_share']);
 
+    Route::post("share/{key}",[UrlController::class,'url_gen']);
+
+    Route::get('update/{id}', [ContactController::class, 'update_form']);
+
     Route::get('add', [ContactController::class, 'add_form']);
 });
 

@@ -54,16 +54,17 @@
 
             @endif
 
-            <td><a href="" data-bs-target="#exampleModal1" class="edit" data-bs-toggle="modal" data-id="{{$contact['id']}}" >Edit</a>
+            <td><a href="{{url('update/'. $contact['id'])}}">Edit</a>
+                {{-- data-bs-target="#exampleModal1" class="edit" data-bs-toggle="modal" data-id="{{$contact['id']}}"--}}
             </td>        
             
-            <td><a href="{{ url('share/'. $contact['id'])}}" class="share" >Share</a>
+            <td><a href="{{ url('share/'. $contact['key'])}}" class="share" >Share</a>
             </td>        
         </tr> 
         @endforeach
     </tbody>
     </table>
-        <script>
+        {{-- <script>
             $(document).ready(function(){
               $(".edit").click(function(){
                 let id  = $(this).data('id');
@@ -94,26 +95,24 @@
               });
             });
 
-    // function html_table_to_excel(type){
-    //     var data = document.getElementById('export_data');
+    function html_table_to_excel(type){
+        var data = document.getElementById('export_data');
 
-    //     var file = XLSX.utils.table_to_book(data, {sheet: "sheet1"});
+        var file = XLSX.utils.table_to_book(data, {sheet: "sheet1"});
 
-    //     // console.log(data,file)
-    //     XLSX.write(file, { bookType: type, bookSST: true, type: 'base64' });
+        // console.log(data,file)
+        XLSX.write(file, { bookType: type, bookSST: true, type: 'base64' });
 
-    //     XLSX.writeFile(file, 'file.' + type);
-    // }
+        XLSX.writeFile(file, 'file.' + type);
+    }
 
-    // const export_button = document.getElementById('export_button');
-    // export_button.addEventListener('click', () =>  {
-    //     html_table_to_excel('xlsx');
-    // });
+    const export_button = document.getElementById('export_button');
+    export_button.addEventListener('click', () =>  {
+        html_table_to_excel('xlsx');
+    });
+    </script> --}}
 
-
-    </script>
-
-<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+{{-- <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script> --}}
 
     {{-- {{ $contacts->links() }} <!-- Pagination --> --}}
     <br><br><br>
@@ -126,7 +125,7 @@
       <!-- Modal -->
       {{-- Update contact --}}
        <!-- Modal -->
-       <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+       {{-- <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -262,7 +261,7 @@
             </div>
           </div>
         </div>
-      </div>  
+      </div>   --}}
 
            </div>
            
@@ -275,6 +274,11 @@
                 pageLength:5,  //customized pagination
             }); 
         });
+</script>
+<script>
+    @if(Session::has('alert'))
+        alert({{ session()->get('alert') }});
+    @endif
 </script>
 @endsection
 

@@ -53,6 +53,13 @@ class ContactController extends Controller
         return view('contact');
     }
 
+
+    public function update_form($id)
+    {
+        $data = Contact::find($id);
+        return view('updateContact', ['contact' => $data]);
+    }
+
     public function show(Request $req)
     {
         $current_user = $req->session()->get('loginId');
@@ -94,6 +101,7 @@ class ContactController extends Controller
     {
 
         $data = Contact::find($req->id);
+        // dd($data);
         $data->firstname = $req->firstname;
         $data->lastname = $req->lastname;
         $data->email = $req->email;

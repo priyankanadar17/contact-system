@@ -8,6 +8,7 @@
     <div class="container">
         <h2 style="text-align: center">Shared Contact</h2>
         <br>
+        @if(!Session::has('alert') && $contacts) 
     <table border="1" class="table table-bordered" id="export_data">
         <thead>
             <tr>
@@ -41,6 +42,12 @@
         </tr> 
     </tbody>
     </table>
+    @endif
+    <script>
+        @if(Session::has('alert'))
+            alert({{ session()->get('alert') }});
+        @endif
+    </script>
 </div>
 
 {{-- @endsection --}}

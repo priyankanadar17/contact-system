@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\UserVerify;
+use DateTime;
+use Carbon\Carbon;
 use Illuminate\Contracts\Session\Session as SessionSession;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -15,14 +18,19 @@ use PDO;
 class CustomAuthController extends Controller
 {
   //yt
-
-  public function login()
+  public function login(Request $request)
   {
+    if (session()->has('loginId') && (url('login1') == $request->url()) ) {
+      return redirect('dashboard');
+    }
     return view('auth1.login1');
   }
 
-  public function registration()
+  public function registration(Request $request)
   {
+    if (session()->has('loginId') && (url('register1') == $request->url()) ) {
+      return redirect('dashboard');
+    }
     return view('auth1.registration1');
   }
 
@@ -42,8 +50,6 @@ class CustomAuthController extends Controller
         'email.email' => 'Please enter a valid email!',
         'phone.numeric' => 'Invalid phone number, only digits allowed!',
         'password.regex' => 'Invalid password, must contain atleast one uppercase,one lowercase,one numeric and one special character!'
-        // 'phone.min'=>'Invalid phone number, minimum 10 digits required!',
-        // 'phone.max'=>'Invalid phone number, digits exceeded!',
       ]
     );
 
@@ -74,21 +80,29 @@ class CustomAuthController extends Controller
 
   public function loginUser(Request $req)
   {
+    if (session()->has('locked')) {
+      $lock = session()->get('locked');
+      $dt = Carbon::parse($lock);
+      $diff_in_sec = $dt->diffInSeconds(Carbon::now());
+      // dd($diff_in_sec,$lock);
+      if ($diff_in_sec > 30) {
+        $req->session()->put('loginAttempts', 0);
+        $req->session()->remove('locked');
+      }else{
+        return back()->with('fail','Please wait for 30 seconds!');
+      }
+    }
+
 
     $req->validate(
       [
         'email_phone' => ['required'],
-        // 'phone' => ['required','regex:/^[7-9][0-9]{9}$/'], //'','max:10'
         'password' => ['required', 'min:6'],
       ],
-      [
-        // 'email_phone.email'=>'Please enter a valid email!',
-        // 'phone.numeric'=>'Invalid phone number, only digits allowed!',
-        // 'password.regex'=>'Invalid password, must contain atleast one uppercase,one lowercase,one numeric and one special character!'
-      ]
     );
 
-
+    
+   
     $var = false;
     if (is_numeric($req->get('email_phone')) || (filter_var($req->get('email_phone'), FILTER_VALIDATE_EMAIL))) {
       $var = true;
@@ -101,15 +115,18 @@ class CustomAuthController extends Controller
         ->first();
       if ($user) {
         if (Hash::check($req->password, $user->password)) {
-          // $user_details = ["firstname"=>$user->firstname];
           $req->session()->put('firstname', $user->firstname);
           $req->session()->put('loginId', $user->id);
           if ($user->is_email_verified == 0) {
             $token = Str::random(64);
-            UserVerify::create([
-              'user_id' => $user->id,
-              'token' => $token
-            ]);
+            
+           $find = UserVerify::where('user_id',$user->id)->first();
+           if($find){
+            UserVerify::where('user_id',$find->user_id)
+                      ->update([
+                        'token'=>$token,
+                      ]);
+          }
             Mail::send('email.emailverify', ['token' => $token], function ($message) use ($req) {
               $message->to($req->email_phone);
               $message->subject('Email Verification ');
@@ -118,9 +135,19 @@ class CustomAuthController extends Controller
           }
           return redirect('dashboard');
         } else {
-          return back()->with('fail', 'Password not matching!');
+          if (!session()->has('loginAttempts')) {
+            $req->session()->put('loginAttempts', 0);
+          }else{
+            session()->put("loginAttempts", session()->get("loginAttempts") + 1);
+          }
+          if (session()->get('loginAttempts') > 2) {
+            $current = Carbon::now();
+            $req->session()->put('locked', $current);
+            return back()->with('fail', 'Please wait for 30 seconds!');
+          }
+          return back()->with('fail', 'Password not matching!' . session()->get('loginAttempts'));
         }
-      } else {
+      } else if ($user == null) {
         return back()->with('fail', 'User not found. Please register!');
       }
     }
