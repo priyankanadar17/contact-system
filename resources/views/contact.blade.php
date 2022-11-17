@@ -87,7 +87,7 @@
                             <div class="form-group col-md-6">
                                 <label for="company">Status</label>
                                 <div class="">
-                                <input id="statusactive" type="radio" @error('status') is-invalid @enderror name="status" autocomplete="new-status" value="Active" checked> <!-- class="form-control"-->
+                                <input id="statusactive" type="radio" @error('status') is-invalid @enderror name="status" autocomplete="new-status" value="Active"> <!-- class="form-control"-->
                                 <label for="statusactive">Active</label>
                                 <input id="statusinactive" type="radio" @error('status') is-invalid @enderror name="status"  autocomplete="new-status" value="Inactive">
                                 <label for="statusinactive">Inactive</label>

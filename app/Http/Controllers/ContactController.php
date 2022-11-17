@@ -63,9 +63,35 @@ class ContactController extends Controller
     public function show(Request $req)
     {
         $current_user = $req->session()->get('loginId');
-        $data = Contact::where('user_id', $current_user)->get();
+        // dd($current_user);
+        $data= Contact::where('user_id', $current_user);
+        $search = $req['search'] ?? "";
+        if ($search != ""){
+            $data->where(function($query) use ($search){
+                $query->where('email',"LIKE", "%$search%")
+                ->orWhere('firstname',"LIKE", "%".$search."%")
+                ->orWhere('lastname',"LIKE", "%".$search."%")
+                ->orWhere('phone',"LIKE", "%".$search."%") ;   
+            });
+            
+            $data=$data->paginate(2)->withQueryString();
+        } else {
+            $data = $data->paginate(2);
+        }
         return view('dashboard', ['contacts' => $data]);
     }
+
+    // public function search(Request $req){
+    //     $current_user = $req->session()->get('loginId');
+    //     // dd($current_user);
+
+    //     $search=$req->get('search');
+    //         $data= Contact::where('email','like','%'.$search.'%')->where('user_id',$current_user)->paginate(2);
+         
+    //      return view('dashboard', ['contacts' => $data]);
+
+    // }
+
 
     public function add(FormDataRequest $req)
     {

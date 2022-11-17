@@ -136,7 +136,7 @@ class CustomAuthController extends Controller
           return redirect('dashboard');
         } else {
           if (!session()->has('loginAttempts')) {
-            $req->session()->put('loginAttempts', 0);
+            $req->session()->put('loginAttempts', 1);
           }else{
             session()->put("loginAttempts", session()->get("loginAttempts") + 1);
           }

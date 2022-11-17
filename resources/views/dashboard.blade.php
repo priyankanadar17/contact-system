@@ -11,6 +11,12 @@
     
     {{-- Search --}}
 
+    <form action="{{ route('dashboard') }}" method="get">
+        {{-- <label for="search">Search</label> --}}
+        <input type="search" id="id" class="form-control" name="search" placeholder="Search here"><br>
+        <button class="btn btn-primary" style="background-color:#0d6efd"> Reset Search </button>
+        </form>
+      <br><br>    
       <table border="1" class="table table-bordered" id = "export_data">
         <thead>
             <tr>
@@ -28,7 +34,6 @@
                 </td>
                 
             </tr>
-    
         </thead>
         <tbody>
         @php
@@ -51,9 +56,7 @@
             <td>Active</td>
             @else 
             <td>Inactive</td>
-
             @endif
-
             <td><a href="{{url('update/'. $contact['id'])}}">Edit</a>
                 {{-- data-bs-target="#exampleModal1" class="edit" data-bs-toggle="modal" data-id="{{$contact['id']}}"--}}
             </td>        
@@ -114,7 +117,8 @@
 
 {{-- <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script> --}}
 
-    {{-- {{ $contacts->links() }} <!-- Pagination --> --}}
+    {{ $contacts->links() }} <!-- Pagination -->
+
     <br><br><br>
     <!-- Button trigger modal -->
     <a href="{{url('add')}}" class="btn btn-primary">
@@ -266,15 +270,15 @@
            </div>
            
 {{-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script>  --}}
-<script src=" https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>  
+{{-- <script src=" https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>  
 <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script> 
 <script>
            $(document).ready(function () {
             $('#export_data').DataTable({
-                pageLength:5,  //customized pagination
+                pageLength:1,  //customized pagination
             }); 
         });
-</script>
+</script> --}}
 <script>
     @if(Session::has('alert'))
         alert({{ session()->get('alert') }});

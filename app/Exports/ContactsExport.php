@@ -13,8 +13,9 @@ class ContactsExport implements FromCollection,WithHeadings
     */
 public function collection()
 {
-    return Contact::select("id", "firstname", "lastname", "email", "phone","address","nickname","company","status","key")
+    return Contact::select("id", "firstname", "lastname", "email", "phone","address","nickname","company","status")
     ->where("user_id", "=",session()->get('loginId'))
+    ->where("status","=",1)
     ->get();
 }
 

@@ -48,7 +48,9 @@ Auth::routes(['verify' => true]);
 
 Route::middleware(['isLoggedIn'])->group( function () {
 
-    Route::get('dashboard',[ContactController::class,'show']);
+    Route::get('dashboard',[ContactController::class,'show'])->name('dashboard');
+
+    Route::get('dashboard/search',[ContactController::class,'search'])->name('search');
 
     Route::post("dashboard",[ContactController::class,'add']);
 
@@ -63,12 +65,14 @@ Route::middleware(['isLoggedIn'])->group( function () {
     Route::get('update/{id}', [ContactController::class, 'update_form']);
 
     Route::get('add', [ContactController::class, 'add_form']);
+
+    Route::get('export', [ContactController::class, 'export'])->name('export');
+
 });
 
 
 Route::get("url/{key}", [UrlController::class, 'url'])->name('url')->middleware('signed');
 
-Route::get('export', [ContactController::class, 'export'])->name('export');
 //yt->middleware('isLoggedIn');
 
 Route::get('login1',[CustomAuthController::class,'login'])->name('login1');
