@@ -13,7 +13,7 @@
 
     <form action="{{ route('dashboard') }}" method="get">
         {{-- <label for="search">Search</label> --}}
-        <input type="search" id="id" class="form-control" name="search" placeholder="Search here"><br>
+        <input type="search" id="id" class="form-control" name="search" placeholder="Search on the basis of firstname, lastname, email or phone"><br>
         <button class="btn btn-primary" style="background-color:#0d6efd"> Reset Search </button>
         </form>
       <br><br>    
@@ -61,7 +61,13 @@
                 {{-- data-bs-target="#exampleModal1" class="edit" data-bs-toggle="modal" data-id="{{$contact['id']}}"--}}
             </td>        
             
-            <td><a href="{{ url('share/'. $contact['key'])}}" class="share" >Share</a>
+            <td>
+                {{-- <a  class="share {{$contact['status']}}" href="{{$contact['status'] ? '#' : {{ url('share/'. $contact['key'])}} }}">Share</a> --}}
+                @if(!$contact['status'])
+                <a class="share " href="#" style="visibility: hidden" >Share</a>
+            @else
+                <a class="share" href="{{ url('share/'. $contact['key'])}}">Share</a>
+            @endif
             </td>        
         </tr> 
         @endforeach
@@ -280,8 +286,8 @@
         });
 </script> --}}
 <script>
-    @if(Session::has('alert'))
-        alert({{ session()->get('alert') }});
+    @if(session()->has('alert'))
+        alert(`{{ session()->get('alert') }}`);
     @endif
 </script>
 @endsection

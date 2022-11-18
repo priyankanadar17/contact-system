@@ -67,7 +67,8 @@ class UrlController extends Controller
     {
         $data = Contact::where("key", $key)->first();
         if ($data->status == 0) {
-            abort(403, "Cannot use URL!Status is inactive!");
+            // abort(403, "Cannot use URL!Status is inactive!");
+            return redirect('dashboard')->with('alert','Cannot use URL!Status is inactive!');
         } else {
             return view('sharedContact', ['contacts' => $data]);
         }
